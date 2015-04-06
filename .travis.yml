@@ -1,0 +1,17 @@
+language: ruby
+rvm:
+  - jruby
+  - jruby-9.0.0.0-pre1
+env:
+  - DIR=uat-consul
+  - DIR=uat-core
+  - DIR=uat-matchers
+
+gemfile: $DIR/Gemfile
+install: cd $DIR; bundle install --jobs=1 --retry=3 --gemfile Gemfile
+
+script: bundle exec rake
+
+matrix:
+  allow_failures:
+      rvm: jruby-9.0.0.0-pre1
