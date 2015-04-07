@@ -1,5 +1,6 @@
 language: ruby
 rvm:
+  - ruby
   - jruby
   - jruby-9.0.0.0-pre1
 env:
@@ -14,4 +15,5 @@ script: bundle exec rake
 
 matrix:
   allow_failures:
+      rvm: ruby
       rvm: jruby-9.0.0.0-pre1
