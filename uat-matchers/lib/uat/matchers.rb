@@ -1,7 +1,1 @@
-require "uat/matchers/version"
-
-module UAT
-  module Matchers
-    # Your code goes here...
-  end
-end
+Dir["#{File.dirname(__FILE__)}/matchers/**/*.rb"].each { |f| require(f) }

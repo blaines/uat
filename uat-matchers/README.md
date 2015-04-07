@@ -1,8 +1,6 @@
 # UAT::Matchers
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/uat/matchers`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A gem providing matchers to aid in testing
 
 ## Installation
 
@@ -22,18 +20,33 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+# uat
 
-## Development
+User Acceptance Test tooling
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/uat-matchers/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+    ```
+    UAT::Matchers::RPCHelper
+       UAT::Matchers::RPCHelper#setup!(url)
+         sets the url used by instances that include this module
+       #make_rpc(rpc_class, method, request, response_class, &optional_block)
+         when the request is successful
+           performs an rspec expectation that the class of the response matches "response_class"
+           behaves like an rpc call
+             creates an instance of rpc_class using the "client" class method, passing a hash with the url parts
+             calls the "method" on the resulting rpc_client, passing in the request
+             registers a callback for success
+             registers a callback for failure
+           and if the rspec expectation fails
+             raises an exception
+           and if the rspec expectation passes
+             and a block is passed
+               calls the block, passing in the response
+         when the request is a failure
+           raises an exception
+           which is the result of calling inspect on the parameter in the on_error handler block (PENDING: Temporarily skipped with xit)
+           behaves like an rpc call
+             creates an instance of rpc_class using the "client" class method, passing a hash with the url parts
+             calls the "method" on the resulting rpc_client, passing in the request
+             registers a callback for success
+             registers a callback for failure
+    ```
