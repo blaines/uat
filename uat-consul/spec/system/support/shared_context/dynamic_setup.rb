@@ -2,6 +2,7 @@ RSpec.shared_context 'dynamic setup' do
   let(:local_mode) { false }
   let(:dynamic_config_hash) do
     {
+        'discover_paths' => discover_paths,
         'protocol' => protocol,
         'prefer_ips' => prefer_ips,
         'append_service_path' => append_service_path

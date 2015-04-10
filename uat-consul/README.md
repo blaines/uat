@@ -1,39 +1,45 @@
-# UAT::Consul
+UAT::Consul
+-----------
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/uat/consul`. To experiment with that code, run `bin/console` for an interactive prompt.
+Interact with, or simulate, consul using this gem.
 
-TODO: Delete this and the text above, and describe your gem
+# Local Mode
 
-## Installation
+    ```
+    {
+        "local_mode": true,
+        "local_service_urls_keyed_by_service_name": {
+            "service1": [
+                "url1",
+                "url2"
+            ]
+        }
+    }
+    ```
 
-Add this line to your application's Gemfile:
+# Server Mode (use actual consul server)
 
-```ruby
-gem 'uat-consul'
-```
+Append a locally configured path to the end of the host/port (support for multiple service N/A)
 
-And then execute:
+    ```
+    {
+        "local_mode": false,
+        "url": "http://consul-server:8080",
+        "protocol": "http",
+        "discover_paths": false,
+        "append_service_path": "/path/to/append/after/host"
+    }
+    ```
 
-    $ bundle
+Discover the pathing information via Consul's Key/Value store:
 
-Or install it yourself as:
-
-    $ gem install uat-consul
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/uat-consul/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+    ```
+    {
+        "local_mode": false,
+        "url": "http://consul-server:8080",
+        "protocol": "http",
+        "discover_paths": true,
+        "service_metadata_key_value_prefix": "chef/services/",
+        "metadata_property_for_path": "root_url_path"
+    }
+    ```

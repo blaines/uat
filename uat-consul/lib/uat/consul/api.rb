@@ -35,8 +35,31 @@ module UAT
             new_diplomat_service,
             @configuration.protocol,
             self,
-            @configuration.append_service_path,
+            new_path_provider
         )
+      end
+
+      # @return [UAT::Consul::Interfaces::IPathProvider]
+      # @private
+      def new_path_provider
+        @configuration.discover_paths? ? new_consul_path_provider : new_configured_path_provider
+      end
+
+      # @return [UAT::Consul::ConsulPathProvider]
+      # @private
+      def new_consul_path_provider
+        ConsulPathProvider.new(
+            Diplomat,
+            @configuration.service_metadata_key_value_prefix,
+            JSON,
+            @configuration.metadata_property_for_path
+        )
+      end
+
+      # @return [UAT::Consul::ConfiguredSinglePathProvider]
+      # @private
+      def new_configured_path_provider
+        ConfiguredSinglePathProvider.new(@configuration.append_service_path)
       end
 
       # @return [UAT::Consul::MockClient]
