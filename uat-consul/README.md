@@ -3,7 +3,22 @@ UAT::Consul
 
 Interact with, or simulate, consul using this gem.
 
-# Local Mode
+# Usage
+
+The behavior for how a client provides the urls for a given named service is determined by how the API was configured.
+See below for example configuration hashes for different desired behaviors.
+
+    ```
+    config = UAT::Consul::Configuration.new(config_hash)
+    api = UAT::Consul::API.new(config)
+
+    client = api.new_client
+    client.urls_for_service('service_name')
+    ```
+
+# Configuration Options
+
+Local Mode
 
     ```
     {
@@ -17,9 +32,9 @@ Interact with, or simulate, consul using this gem.
     }
     ```
 
-# Server Mode (use actual consul server)
+Server Mode
 
-Append a locally configured path to the end of the host/port (support for multiple service N/A)
+    Append a locally configured path to the end of the host/port (support for multiple service N/A)
 
     ```
     {
@@ -31,7 +46,7 @@ Append a locally configured path to the end of the host/port (support for multip
     }
     ```
 
-Discover the pathing information via Consul's Key/Value store:
+    Discover the pathing information via Consul's Key/Value store:
 
     ```
     {
