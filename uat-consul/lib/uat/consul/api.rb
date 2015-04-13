@@ -13,23 +13,7 @@ module UAT
         @configuration.local_mode? ? new_mock_client : new_real_client
       end
 
-      # @return [Diplomat::Service]
-      # @private
-      def new_diplomat_service
-        configure_diplomat
-        Diplomat::Service
-      end
-
-      # @return [Void] configures diplomat to use the configured consul_url
-      # @private
-      def configure_diplomat
-        Diplomat.configure do |config|
-          config.url = @configuration.url
-        end
-      end
-
       # @return [UAT::Consul::Client]
-      # @private
       def new_real_client
         Client.new(
             new_diplomat_service,
@@ -38,6 +22,22 @@ module UAT
             new_path_provider
         )
       end
+
+      # @return [UAT::Consul::MockClient]
+      def new_mock_client
+        MockClient.new(
+            @configuration.local_service_urls_keyed_by_service_name,
+            self
+        )
+      end
+
+      # @param uri_string the uri string that should be converted to a URI object
+      # @return [URI::Generic]
+      def new_uri(uri_string)
+        URI(uri_string)
+      end
+
+      private
 
       # @return [UAT::Consul::Interfaces::IPathProvider]
       # @private
@@ -62,20 +62,19 @@ module UAT
         ConfiguredSinglePathProvider.new(@configuration.append_service_path)
       end
 
-      # @return [UAT::Consul::MockClient]
+      # @return [Diplomat::Service]
       # @private
-      def new_mock_client
-        MockClient.new(
-            @configuration.local_service_urls_keyed_by_service_name,
-            self
-        )
+      def new_diplomat_service
+        configure_diplomat
+        Diplomat::Service
       end
 
-      # @param uri_string the uri string that should be converted to a URI object
-      # @return [URI::Generic]
+      # @return [Void] configures diplomat to use the configured consul_url
       # @private
-      def new_uri(uri_string)
-        URI(uri_string)
+      def configure_diplomat
+        Diplomat.configure do |config|
+          config.url = @configuration.url
+        end
       end
     end
   end
