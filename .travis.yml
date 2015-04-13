@@ -4,7 +4,7 @@ rvm:
 - jruby
 - jruby-9.0.0.0-pre1
 env:
-- DIR=uat-consul
+- DIR=uat-discovery
 - DIR=uat-core
 - DIR=uat-matchers
 gemfile: "$DIR/Gemfile"
