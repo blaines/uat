@@ -28,15 +28,15 @@ describe UAT::Discovery::Client do
     context 'when service is found' do
       let(:diplomat_service_1) { double :OpenStruct, :ServicePort => 1, :Address => host_name }
       let(:diplomat_service_2) { double :OpenStruct, :ServicePort => 2, :Address => host_name }
-      let(:diplomat_return_value) { [ diplomat_service_1, diplomat_service_2] }
+      let(:diplomat_return_value) { [ diplomat_service_1, diplomat_service_2, diplomat_service_2] }
 
-      it 'returns an array of urls' do
+      it 'returns an array of urls without duplicates' do
         expected_uri1 = "#{protocol}://#{host_name}:#{diplomat_service_1.ServicePort}#{append_service_path}"
         expected_uri2 = "#{protocol}://#{host_name}:#{diplomat_service_2.ServicePort}#{append_service_path}"
 
         expect(urls_for_service).to_not be_empty
-        expect(api).to have_received(:new_uri).with(expected_uri1)
-        expect(api).to have_received(:new_uri).with(expected_uri2)
+        expect(api).to have_received(:new_uri).once.with(expected_uri1)
+        expect(api).to have_received(:new_uri).once.with(expected_uri2)
       end
     end
   end
