@@ -1,9 +1,11 @@
 module UAT
   module Matchers
     # DRY up protobuf RPC call expectations with RPCHelper
-    module RPCHelper
-      def self.setup!(rpc_service_url)
-        @@rpc_service_url = rpc_service_url
+    class RPCHelper
+      # @param rpc_service_url [URI::Generic]
+      def initialize(rpc_service_url, rspec_example)
+        @rpc_service_url = rpc_service_url
+        @rspec_example = rspec_example
       end
 
       # @param rpc_class [#client] an rpc class with a client class method
@@ -14,15 +16,15 @@ module UAT
       # @yieldparam response [Protobuf::Message]
       # @yieldreturn is not used
       def make_rpc(rpc_class, method, request, response_class, &block_that_receives_vetted_response)
-        opts = {:host => @@rpc_service_url.host,
-                :port => @@rpc_service_url.port,
-                :base => @@rpc_service_url.path}
-        rpc_class.client(opts).send(method, request) do |c|
-          c.on_success do |response|
-            expect(response.class).to be response_class
+        opts = {:host => @rpc_service_url.host,
+                :port => @rpc_service_url.port,
+                :base => @rpc_service_url.path}
+        rpc_class.client(opts).send(method, request) do |rpc_response_handler|
+          rpc_response_handler.on_success do |response|
+            @rspec_example.expect(response.class).to @rspec_example.be response_class
             block_that_receives_vetted_response.call(response) unless block_that_receives_vetted_response.nil?
           end
-          c.on_failure {|err| raise err.inspect }
+          rpc_response_handler.on_failure {|err| raise err.inspect }
         end
       end
     end

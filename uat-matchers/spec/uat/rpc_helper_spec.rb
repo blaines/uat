@@ -1,16 +1,5 @@
 describe UAT::Matchers::RPCHelper do
-  class PretendRSpecDescribeBlock
-    include UAT::Matchers::RPCHelper
-  end
-
   let(:url) { double :URL, :host=>'host',:port=>1234,:path=>'/base' }
-  let(:setup) { UAT::Matchers::RPCHelper.setup!(url) }
-
-  describe 'UAT::Matchers::RPCHelper#setup!(url)' do
-    it 'sets the url used by instances that include this module' do
-      expect{setup}.not_to raise_error
-    end
-  end
 
   describe '#make_rpc(rpc_class, method, request, response_class, &optional_block)' do
     let(:rpc_client) { double :RPCClient }
@@ -19,14 +8,14 @@ describe UAT::Matchers::RPCHelper do
     let(:response_class) { double :ResponseClass }
     let(:rpc_class) { double :RPCClass, :client=>rpc_client }
     let(:callback) { double :callback, :on_success=>nil, :on_failure=>nil }
-    let(:rpc) { PretendRSpecDescribeBlock.new }
+    let(:rspec_example) { double :RSpecExample }
     let(:optional_block) { nil }
-    let(:send_rpc) { rpc.make_rpc(rpc_class, method, request, response_class, &optional_block) }
+    let(:send_rpc) { subject.make_rpc(rpc_class, method, request, response_class, &optional_block) }
     let(:expectation) { double :RSpecExpectation, :to=>nil }
+    subject { described_class.new(url, rspec_example) }
     before(:each) do
-      setup
-      allow(rpc).to receive(:expect).and_return(expectation)
-      allow(rpc).to receive(:be).and_return(nil)
+      allow(rspec_example).to receive(:expect).and_return(expectation)
+      allow(rspec_example).to receive(:be).and_return(nil)
       allow(rpc_client).to receive(:some_method).and_yield(callback)
     end
     shared_examples 'an rpc call' do
@@ -55,11 +44,11 @@ describe UAT::Matchers::RPCHelper do
       it 'performs an rspec expectation that the class of the response matches "response_class"' do
         send_rpc
         expect(response).to have_received(:class)
-        expect(rpc).to have_received(:expect).with(response_class)
-        expect(rpc).to have_received(:be).with(response_class)
+        expect(rspec_example).to have_received(:expect).with(response_class)
+        expect(rspec_example).to have_received(:be).with(response_class)
       end
       context 'and if the rspec expectation fails' do
-        before(:each) { allow(rpc).to receive(:be).and_raise }
+        before(:each) { allow(rspec_example).to receive(:be).and_raise }
         it 'raises an exception' do
           expect{send_rpc}.to raise_error
         end
@@ -91,9 +80,6 @@ describe UAT::Matchers::RPCHelper do
       end
       it 'raises an exception' do
         expect{send_rpc}.to raise_error
-      end
-      xit 'which is the result of calling inspect on the parameter in the on_error handler block' do
-        expect(response).to have_received(:inspect)
       end
     end
   end
