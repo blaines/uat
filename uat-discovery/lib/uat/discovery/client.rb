@@ -18,7 +18,7 @@ module UAT
       def urls_for_service(service_name)
         diplomat_services = @diplomat_service.get(service_name, :all)
         path = @path_provider.path_to_append_for(service_name)
-        diplomat_services.uniq.map {|diplomat_service| @api.new_uri(uri_string(diplomat_service, path)) }
+        diplomat_services.map {|diplomat_service| @api.new_uri(uri_string(diplomat_service, path)) }.uniq
       end
 
       private
