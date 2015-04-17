@@ -4,8 +4,9 @@ describe UAT::Discovery::Client do
   let(:append_service_path) { double(:append_service_path).to_s }
   let(:path_provider) { double :IPathProvider, :path_to_append_for => append_service_path }
   let(:host_name) { double(:host_name).to_s }
-  let(:uri) { double :URI }
-  let(:api) { double :TestAutomationAPI, :new_uri=>uri}
+  let(:uri1) { double :URI }
+  let(:uri2) { double :URI }
+  let(:api) { double :TestAutomationAPI}
   subject { UAT::Discovery::Client.new diplomat_service, protocol, api, path_provider }
   describe '#new(diplomat_service, domain_to_append_to_naked_discovery_hosts)' do
     let(:diplomat_return_value) { [] }
@@ -29,14 +30,12 @@ describe UAT::Discovery::Client do
       let(:diplomat_service_1) { double :OpenStruct, :ServicePort => 1, :Address => host_name }
       let(:diplomat_service_2) { double :OpenStruct, :ServicePort => 2, :Address => host_name }
       let(:diplomat_return_value) { [ diplomat_service_1, diplomat_service_2, diplomat_service_2] }
-
+      let(:expected_uri1) { "#{protocol}://#{host_name}:#{diplomat_service_1.ServicePort}#{append_service_path}" }
+      let(:expected_uri2) { "#{protocol}://#{host_name}:#{diplomat_service_2.ServicePort}#{append_service_path}"}
       it 'returns an array of urls without duplicates' do
-        expected_uri1 = "#{protocol}://#{host_name}:#{diplomat_service_1.ServicePort}#{append_service_path}"
-        expected_uri2 = "#{protocol}://#{host_name}:#{diplomat_service_2.ServicePort}#{append_service_path}"
-
-        expect(urls_for_service).to_not be_empty
-        expect(api).to have_received(:new_uri).once.with(expected_uri1)
-        expect(api).to have_received(:new_uri).once.with(expected_uri2)
+        expect(api).to receive(:new_uri).once.with(expected_uri1).and_return(uri1)
+        expect(api).to receive(:new_uri).twice.with(expected_uri2).and_return(uri2)
+        expect(urls_for_service).to eq([uri1,uri2])
       end
     end
   end
