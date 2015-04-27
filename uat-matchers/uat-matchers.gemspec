@@ -6,6 +6,8 @@ require 'uat/matchers/version'
 Gem::Specification.new do |spec|
   spec.name          = "uat-matchers"
   spec.version       = UAT::Matchers::VERSION
+  spec.version       = "#{spec.version}.#{ENV['TRAVIS_BUILD_NUMBER']}.pre" if ENV['TRAVIS']
+
   spec.authors       = ["Tommy Sullivan", "Blaine Schanfeldt"]
   spec.email         = ["thomas.sullivan@lookout.com", "blaine.schanfeldt@lookout.com"]
 

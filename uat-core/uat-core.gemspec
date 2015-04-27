@@ -6,11 +6,12 @@ require 'uat/core/version'
 Gem::Specification.new do |spec|
   spec.name          = "uat-core"
   spec.version       = UAT::Core::VERSION
+  spec.version       = "#{spec.version}.#{ENV['TRAVIS_BUILD_NUMBER']}.pre" if ENV['TRAVIS']
+
   spec.authors       = ["Tommy Sullivan", "Blaine Schanfeldt"]
   spec.email         = ["thomas.sullivan@lookout.com", "blaine.schanfeldt@lookout.com"]
 
   spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = 'MIT'
 
