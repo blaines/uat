@@ -4,15 +4,16 @@ rvm:
 - jruby
 - jruby-9.0.0.0-pre1
 env:
-- DIR=uat-discovery
-- DIR=uat-core
-- DIR=uat-matchers
-gemfile: "$DIR/Gemfile"
-install: cd $DIR; bundle install --jobs=1 --retry=3 --gemfile Gemfile
+- GEMNAME=uat-discovery
+- GEMNAME=uat-core
+- GEMNAME=uat-matchers
+gemfile: "$GEMNAME/Gemfile"
+install: cd $GEMNAME; bundle install --jobs=1 --retry=3 --gemfile Gemfile
 script: bundle exec rake
 matrix:
   allow_failures:
     rvm: jruby-9.0.0.0-pre1
 deploy:
+  gem: "$GEMNAME"
   api_key:
     secure: Jfs2kwC7Erhl4H3A6s8nwQ8Fc5eCPdYVoHclVOH5GQKvVHsrcLc9GUhKXQZhFM5yV7CYQLlhZlDAhkKyPXu96i2bphYrP1MWu0aRMjmWlPNbjgjO9234mCF5H+gg0OL5H7Gn9FDeTEamzdfoxeHxiOvYJ4oRciGtClIxgYcaur4=
