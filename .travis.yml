@@ -14,6 +14,7 @@ matrix:
   allow_failures:
     rvm: jruby-9.0.0.0-pre1
 deploy:
+  provider: rubygems
   gem: "$GEMNAME"
   api_key:
     secure: Jfs2kwC7Erhl4H3A6s8nwQ8Fc5eCPdYVoHclVOH5GQKvVHsrcLc9GUhKXQZhFM5yV7CYQLlhZlDAhkKyPXu96i2bphYrP1MWu0aRMjmWlPNbjgjO9234mCF5H+gg0OL5H7Gn9FDeTEamzdfoxeHxiOvYJ4oRciGtClIxgYcaur4=
